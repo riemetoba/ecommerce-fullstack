@@ -8,7 +8,7 @@ const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$
 _.post("/registration", (req, res) => {
   let { fullName, email, password, confirmPassword, terms } = req.body;
 
-  //  fields validation
+  // All fields validation
   if (!fullName || !email || !password || !confirmPassword || !terms) {
     return res.status(400).json({
       success: false,
@@ -24,10 +24,10 @@ _.post("/registration", (req, res) => {
     });
   }
   // password validation
-  if (!emailRegex.test(email)) {
+  if (!passwordRegex.test(password)) {
      return res.status(400).json({
       success: false,
-      message: "Please enter a valid Email",
+      message: "Password must be at least 8 characters long and include an uppercase letter, a lowercase letter, a number, and a special character",
     });
   }
 
