@@ -1,7 +1,12 @@
+require('node:dns').setServers(['1.1.1.1','8.8.8.8'])
 require("dotenv").config()
 const express = require("express")
 const app = express()
 const authRouter = require('./routes/authRouter')
+const mongoDB = require("./config/dbConnection")
+
+
+mongoDB()
 
 app.use(express.json())
 
