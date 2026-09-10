@@ -1,9 +1,14 @@
+const User = require('../models/userSchema')
+
 const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
 
-const registrationController = (req, res) => {
+const registrationController = async (req, res) => {
   let { fullName, email, password, confirmPassword, terms } = req.body;
+
+
+  const existingUser = await User.findOne({email})
 
   // All fields validation
   if (!fullName || !email || !password || !confirmPassword || !terms) {
