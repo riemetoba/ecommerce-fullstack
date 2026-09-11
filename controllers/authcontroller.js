@@ -1,8 +1,8 @@
-const User = require('../models/userSchema')
+const User = require("../models/userSchema");
 const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
-const { verificationEmail } = require('../utils/transporter');
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+const { verificationEmail } = require("../utils/transporter");
 // const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
 // Registration controller start
@@ -10,7 +10,7 @@ const registrationController = async (req, res) => {
   let { fullName, email, password, confirmPassword, terms } = req.body;
 
   // Check if the user already exists in the database
-  const existingUser = await User.findOne({email})
+  const existingUser = await User.findOne({ email });
 
   // Return error if user already exists
   if (existingUser) {
@@ -30,12 +30,12 @@ const registrationController = async (req, res) => {
 
   // Validate email format using regex
   if (!emailRegex.test(email)) {
-     return res.status(400).json({
+    return res.status(400).json({
       success: false,
       message: "Please enter a valid Email",
     });
   }
-  
+
   // Validate password strength using regex (Currently disabled)
   // if (!passwordRegex.test(password)) {
   //    return res.status(400).json({
@@ -58,36 +58,40 @@ const registrationController = async (req, res) => {
   // Create a new user instance and save it to the database
   const user = new User({
     fullName: fullName,
-    email: email, 
+    email: email,
     password: hash,
-    terms: terms
-  })
-  user.save()
+    terms: terms,
+  });
+  user.save();
 
   // Generate JWT verification token for the new user
-  const verificationToken = jwt.sign({
-    _id: user._id,
-    email: user.email,
-    role: user.role
-  }, 'itsSecret', {expiresIn: '3d'})
+  const verificationToken = jwt.sign(
+    {
+      _id: user._id,
+      email: user.email,
+      role: user.role,
+    },
+    process.env.JWT_VERIFY_SECRET,
+    { expiresIn: "3d" },
+  );
 
   // Send verification email to the user
-  verificationEmail(email, verificationToken)
-  
+  verificationEmail(email, verificationToken);
+
   return res.status(201).json({
     success: true,
-    message: "Registration Successful"
-  })
-}
+    message: "Registration Successful",
+  });
+};
 // Registration controller end
 
 // Login controller start
 const loginController = async (req, res) => {
   // Extract email and password from request body
-  let {email, password} = req.body
+  let { email, password } = req.body;
 
   // Find user in the database by email
-  const existingUser = await User.findOne({email})
+  const existingUser = await User.findOne({ email });
 
   // Return error if user does not exist
   if (!existingUser) {
@@ -107,7 +111,7 @@ const loginController = async (req, res) => {
 
   // Validate email format using regex
   if (!emailRegex.test(email)) {
-     return res.status(400).json({
+    return res.status(400).json({
       success: false,
       message: "Please enter a valid Email",
     });
@@ -115,7 +119,7 @@ const loginController = async (req, res) => {
 
   // Compare input password with hashed password stored in database
   let comparePassword = bcrypt.compareSync(password, existingUser.password);
-   
+
   // Handle successful login or incorrect password response
   if (comparePassword) {
     return res.status(200).json({
@@ -125,8 +129,8 @@ const loginController = async (req, res) => {
         _id: existingUser._id,
         fullName: existingUser.fullName,
         email: existingUser.email,
-        role: existingUser.role
-      }
+        role: existingUser.role,
+      },
     });
   } else {
     return res.status(400).json({
@@ -134,8 +138,34 @@ const loginController = async (req, res) => {
       message: "Invaild Credential",
     });
   }
-}
+};
 // Login controller end
 
+// verification controller start
+const verifyEmailController = async (req, res) => {
+  // Extract verification token from request parameters
+  let { token } = req.params;
 
-module.exports = {registrationController, loginController}
+  // Verify and decode the JWT verification token
+  let decoded = jwt.verify(token, process.env.JWT_VERIFY_SECRET);
+
+  // Update user verification status in the database
+  let verifiedUser = await User.findByIdAndUpdate(
+    { _id: decoded._id },
+    { isverified: true },
+  );
+
+  // Return success response
+  res.status(200).json({
+    success: true,
+    message: "Email verified successfully!",
+  });
+};
+
+// verification controller end
+
+module.exports = {
+  registrationController,
+  loginController,
+  verifyEmailController,
+};
