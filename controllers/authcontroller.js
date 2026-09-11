@@ -7,8 +7,16 @@ const bcrypt = require('bcrypt');
 const registrationController = async (req, res) => {
   let { fullName, email, password, confirmPassword, terms } = req.body;
 
-
+// finding User in database
   const existingUser = await User.findOne({email})
+
+  // existingUser validation
+  if (existingUser) {
+    return res.status(400).json({
+      success: false,
+      message: "User already exist",
+    });
+  }
 
   // All fields validation
   if (!fullName || !email || !password || !confirmPassword || !terms) {
