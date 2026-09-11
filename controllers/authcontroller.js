@@ -1,7 +1,6 @@
 const User = require('../models/userSchema')
-
 const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+// const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
 
 const registrationController = async (req, res) => {
@@ -26,12 +25,12 @@ const registrationController = async (req, res) => {
     });
   }
   // password validation
-  if (!passwordRegex.test(password)) {
-     return res.status(400).json({
-      success: false,
-      message: "Password must be at least 8 characters long and include an uppercase letter, a lowercase letter, a number, and a special character",
-    });
-  }
+  // if (!passwordRegex.test(password)) {
+  //    return res.status(400).json({
+  //     success: false,
+  //     message: "Password must be at least 8 characters long and include an uppercase letter, a lowercase letter, a number, and a special character",
+  //   });
+  // }
 
   //   password, confirmPassword validation
   if (password !== confirmPassword) {
@@ -40,6 +39,20 @@ const registrationController = async (req, res) => {
       message: "Password do not match",
     });
   }
+
+  // save in database
+  const user = new User({
+    fullName: fullName,
+    email: email, 
+    password: password,
+    terms: terms
+  })
+  user.save()
+
+  return res.status(201).json({
+    success: true,
+    message: "Registration Successful"
+  })
 }
 
 module.exports = registrationController
