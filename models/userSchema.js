@@ -28,6 +28,10 @@ const userSchema = new Schema({
         type: String,
         enum: ['active', 'deactive'],
         default: 'active'
+    },
+    isverified: {
+        type: Boolean,
+        default: false
     }
 })
 

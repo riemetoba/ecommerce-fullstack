@@ -1,6 +1,8 @@
 const User = require('../models/userSchema')
 const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+const { verificationEmail } = require('../utils/transporter');
 // const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
 
@@ -60,6 +62,16 @@ const registrationController = async (req, res) => {
     terms: terms
   })
   user.save()
+
+  // JWT token verify 
+  const verificationToken = jwt.sign({
+    _id: user._id,
+    email: user.email,
+    role: user.role
+  }, 'itsSecret', {expiresIn: '3d'})
+
+  verificationEmail(email, verificationToken)
+  
 
   return res.status(201).json({
     success: true,
