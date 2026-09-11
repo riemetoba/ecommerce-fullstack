@@ -1,5 +1,6 @@
 const User = require('../models/userSchema')
 const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+const bcrypt = require('bcrypt');
 // const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
 
@@ -40,11 +41,14 @@ const registrationController = async (req, res) => {
     });
   }
 
+  // password hashing
+  const hash = bcrypt.hashSync(password, 10);
+
   // save in database
   const user = new User({
     fullName: fullName,
     email: email, 
-    password: password,
+    password: hash,
     terms: terms
   })
   user.save()
