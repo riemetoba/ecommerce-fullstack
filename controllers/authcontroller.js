@@ -72,7 +72,7 @@ const registrationController = async (req, res) => {
       role: user.role,
     },
     process.env.JWT_VERIFY_SECRET,
-    { expiresIn: "3d" },
+    { expiresIn: "20d" },
   );
 
   // Send verification email to the user
@@ -122,6 +122,15 @@ const loginController = async (req, res) => {
 
   // Handle successful login or incorrect password response
   if (comparePassword) {
+ const accessToken = jwt.sign(
+    {
+      _id: existingUser._id,
+      email: existingUser.email,
+      role: existingUser.role,
+    },
+    process.env.JWT_VERIFY_SECRET,
+    { expiresIn: "20d" },
+  )
     return res.status(200).json({
       success: true,
       message: "Login successful",
@@ -131,6 +140,8 @@ const loginController = async (req, res) => {
         email: existingUser.email,
         role: existingUser.role,
       },
+      accessToken: accessToken
+      
     });
   } else {
     return res.status(400).json({
