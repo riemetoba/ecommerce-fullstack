@@ -12,7 +12,7 @@ const transporter = nodemailer.createTransport({
 });
 
 
-// sending email 
+// verfication email send
 
 let verificationEmail = async(email, token)=>{
     try {
@@ -30,5 +30,24 @@ let verificationEmail = async(email, token)=>{
 }
 }
 
+// forgotPassword email send
+let forgotPasswordEmail = async(email, token)=>{
+    try {
+  const info = await transporter.sendMail({
+    from: process.env.SMTP_USER,
+    to: email, 
+    subject: "Reset Password", 
+    html: `<b>Reset your password<a href="http://localhost:5173/resetPassword/${token}">Click Here</a></b>`,
+  });
 
-module.exports = {verificationEmail}
+  console.log("Message sent: %s", info.messageId);
+  console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+} catch (err) {
+  console.error("Error while sending mail:", err);
+}
+}
+
+
+
+
+module.exports = {verificationEmail, forgotPasswordEmail}

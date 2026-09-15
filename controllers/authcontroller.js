@@ -175,8 +175,17 @@ const verifyEmailController = async (req, res) => {
 
 // verification controller end
 
+// forgot password controller start
+const forgotPasswordController = async (req, res) => {
+  let {email} = req.body
+
+  const existingUser = await User.find({email})
+}
+// forgot password controller end
+
 module.exports = {
   registrationController,
   loginController,
   verifyEmailController,
+  forgotPasswordController
 };
