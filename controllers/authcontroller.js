@@ -2,7 +2,7 @@ const User = require("../models/userSchema");
 const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const { verificationEmail } = require("../utils/transporter");
+const { verificationEmail, forgotPasswordEmail } = require("../utils/transporter");
 // const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
 // Registration controller start
@@ -180,6 +180,29 @@ const forgotPasswordController = async (req, res) => {
   let {email} = req.body
 
   const existingUser = await User.find({email})
+
+  if(!existingUser){
+     return res.status(400).json({
+      success: false,
+      message: "User not found",
+    });
+  }
+
+  const resetPasswordToken = jwt.sign(
+    {
+      _id: existingUser._id,
+      email: existingUser.email,
+      role: existingUser.role,
+    },
+    process.env.JWT_VERIFY_SECRET,
+    { expiresIn: "20d" },
+  )
+  forgotPasswordEmail(email, resetPasswordToken)
+
+  return res.status(400).json({
+      success: true,
+      message: "Check your Email for reseting password",
+    });
 }
 // forgot password controller end
 
@@ -189,3 +212,6 @@ module.exports = {
   verifyEmailController,
   forgotPasswordController
 };
+
+
+// eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3ODk0OTAwNDgsImV4cCI6MTc5MTIxODA0OH0.K7IEzIakV2WbD8d9nDiVGOKcEmTmUvj_IutUnLkx2Zk
