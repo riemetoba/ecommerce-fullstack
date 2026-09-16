@@ -211,13 +211,13 @@ const resetPasswordController = async (req, res) => {
   let {token} = req.params
   let {newPassword, confirmPassword} = req.body
 
- let decoded = jwt.verify(token, process.env.JWT_VERIFY_SECRET);
- console.log(decoded);
+ let {_id} = jwt.verify(token, process.env.JWT_VERIFY_SECRET);
+
  
- if (decoded) {
+ if (_id) {
   if (newPassword == confirmPassword) {
      const hash = bcrypt.hashSync(newPassword, 10);
-    await User.findByIdAndUpdate({_id: decoded._id}, {password: hash})
+    await User.findByIdAndUpdate(_id, {password: hash})
     return res.status(200).json({
        success: true,
       message: "Password reset done"
