@@ -161,7 +161,7 @@ const verifyEmailController = async (req, res) => {
   let decoded = jwt.verify(token, process.env.JWT_VERIFY_SECRET);
 
   // Update user verification status in the database
-  let verifiedUser = await User.findByIdAndUpdate(
+  await User.findByIdAndUpdate(
     { _id: decoded._id },
     { isverified: true },
   );
@@ -209,6 +209,27 @@ const forgotPasswordController = async (req, res) => {
 // reset password controller start
 const resetPasswordController = async (req, res) => {
   let {token} = req.params
+  let {newPassword, confirmPassword} = req.body
+
+ let decoded = jwt.verify(token, process.env.JWT_VERIFY_SECRET);
+ console.log(decoded);
+ 
+ if (decoded) {
+  if (newPassword == confirmPassword) {
+     const hash = bcrypt.hashSync(newPassword, 10);
+    await User.findByIdAndUpdate({_id: decoded._id}, {password: hash})
+    return res.status(200).json({
+       success: true,
+      message: "Password reset done"
+    })
+  }else{
+    return res.status(400).json({
+       success: false,
+      message: "Password not match"
+    })
+  }
+ }
+   
 }
 // reset password controller end
 
