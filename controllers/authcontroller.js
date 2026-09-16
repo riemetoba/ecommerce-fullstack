@@ -206,11 +206,18 @@ const forgotPasswordController = async (req, res) => {
 }
 // forgot password controller end
 
+// reset password controller start
+const resetPasswordController = async (req, res) => {
+  let {token} = req.params
+}
+// reset password controller end
+
 module.exports = {
   registrationController,
   loginController,
   verifyEmailController,
-  forgotPasswordController
+  forgotPasswordController,
+  resetPasswordController
 };
 
 
