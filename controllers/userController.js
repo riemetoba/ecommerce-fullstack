@@ -1,5 +1,5 @@
-let userController = ()=>{
-    console.log("Hello user");
+let userController = (req, res)=>{
+    res.send("Hello user");
     
 }
 

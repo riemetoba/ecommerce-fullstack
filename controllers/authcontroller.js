@@ -163,7 +163,7 @@ const verifyEmailController = async (req, res) => {
   let decoded = jwt.verify(token, process.env.JWT_VERIFY_SECRET);
 
   // Update user verification status in the database
-  await User.findByIdAndUpdate({ _id: decoded._id }, { isverified: true });
+  await User.findByIdAndUpdate( decoded._id , { isverified: true });
 
   // Return success response
   res.status(200).json({
@@ -210,13 +210,12 @@ const resetPasswordController = async (req, res) => {
   let { token } = req.params;
   let { newPassword, confirmPassword } = req.body;
 
-  let { _id } = jwt.verify(token, process.env.JWT_VERIFY_SECRET);
-  // HW ache ekhane ekta. seta holo "docoded" (now _id) na thakle ekta error dekhate hobe
+let decoded = jwt.verify(token, process.env.JWT_VERIFY_SECRET);
 
-  if (_id) {
+  if (decoded) {
     if (newPassword == confirmPassword) {
       const hash = bcrypt.hashSync(newPassword, 10);
-      await User.findByIdAndUpdate(_id, { password: hash });
+      await User.findByIdAndUpdate(decoded._id, { password: hash });
     } else {
       return res.status(400).json({
         success: false,
@@ -239,4 +238,4 @@ module.exports = {
   resetPasswordController,
 };
 
-// eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3ODk0OTAwNDgsImV4cCI6MTc5MTIxODA0OH0.K7IEzIakV2WbD8d9nDiVGOKcEmTmUvj_IutUnLkx2Zk
+
