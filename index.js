@@ -7,6 +7,7 @@ const userRouter = require('./routes/userRouter')
 const adminRouter = require('./routes/adminRouter')
 const vendorRouter = require('./routes/vendorRouter')
 const mongoDB = require("./config/dbConnection")
+const { adminMiddleware } = require('./middleware/roleMiddleware')
 
 
 mongoDB()
@@ -16,7 +17,7 @@ app.use(express.json())
 
 app.use("/api/v1/auth", authRouter)
 app.use("/api/v1/user", userRouter)
-app.use("/api/v1/admin", adminRouter)
+app.use("/api/v1/admin",adminMiddleware, adminRouter)
 app.use("/api/v1/vendor", vendorRouter)
 
 
