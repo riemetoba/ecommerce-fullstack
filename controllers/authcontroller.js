@@ -2,7 +2,10 @@ const User = require("../models/userSchema");
 const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const { verificationEmail, forgotPasswordEmail } = require("../utils/transporter");
+const {
+  verificationEmail,
+  forgotPasswordEmail,
+} = require("../utils/transporter");
 // const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
 // Registration controller start
@@ -122,15 +125,15 @@ const loginController = async (req, res) => {
 
   // Handle successful login or incorrect password response
   if (comparePassword) {
- const accessToken = jwt.sign(
-    {
-      _id: existingUser._id,
-      email: existingUser.email,
-      role: existingUser.role,
-    },
-    process.env.JWT_VERIFY_SECRET,
-    { expiresIn: "20d" },
-  )
+    const accessToken = jwt.sign(
+      {
+        _id: existingUser._id,
+        email: existingUser.email,
+        role: existingUser.role,
+      },
+      process.env.JWT_VERIFY_SECRET,
+      { expiresIn: "20d" },
+    );
     return res.status(200).json({
       success: true,
       message: "Login successful",
@@ -140,8 +143,7 @@ const loginController = async (req, res) => {
         email: existingUser.email,
         role: existingUser.role,
       },
-      accessToken: accessToken
-      
+      accessToken: accessToken,
     });
   } else {
     return res.status(400).json({
@@ -161,10 +163,7 @@ const verifyEmailController = async (req, res) => {
   let decoded = jwt.verify(token, process.env.JWT_VERIFY_SECRET);
 
   // Update user verification status in the database
-  await User.findByIdAndUpdate(
-    { _id: decoded._id },
-    { isverified: true },
-  );
+  await User.findByIdAndUpdate({ _id: decoded._id }, { isverified: true });
 
   // Return success response
   res.status(200).json({
@@ -177,12 +176,12 @@ const verifyEmailController = async (req, res) => {
 
 // forgot password controller start
 const forgotPasswordController = async (req, res) => {
-  let {email} = req.body
+  let { email } = req.body;
 
-  const existingUser = await User.find({email})
+  const existingUser = await User.find({ email });
 
-  if(!existingUser){
-     return res.status(400).json({
+  if (!existingUser) {
+    return res.status(400).json({
       success: false,
       message: "User not found",
     });
@@ -196,41 +195,40 @@ const forgotPasswordController = async (req, res) => {
     },
     process.env.JWT_VERIFY_SECRET,
     { expiresIn: "20d" },
-  )
-  forgotPasswordEmail(email, resetPasswordToken)
+  );
+  forgotPasswordEmail(email, resetPasswordToken);
 
   return res.status(400).json({
-      success: true,
-      message: "Check your Email for reseting password",
-    });
-}
+    success: true,
+    message: "Check your Email for reseting password",
+  });
+};
 // forgot password controller end
 
 // reset password controller start
 const resetPasswordController = async (req, res) => {
-  let {token} = req.params
-  let {newPassword, confirmPassword} = req.body
+  let { token } = req.params;
+  let { newPassword, confirmPassword } = req.body;
 
- let {_id} = jwt.verify(token, process.env.JWT_VERIFY_SECRET);
+  let { _id } = jwt.verify(token, process.env.JWT_VERIFY_SECRET);
+  // HW ache ekhane ekta. seta holo "docoded" (now _id) na thakle ekta error dekhate hobe
 
- 
- if (_id) {
-  if (newPassword == confirmPassword) {
-     const hash = bcrypt.hashSync(newPassword, 10);
-    await User.findByIdAndUpdate(_id, {password: hash})
-    return res.status(200).json({
-       success: true,
-      message: "Password reset done"
-    })
-  }else{
-    return res.status(400).json({
-       success: false,
-      message: "Password not match"
-    })
+  if (_id) {
+    if (newPassword == confirmPassword) {
+      const hash = bcrypt.hashSync(newPassword, 10);
+      await User.findByIdAndUpdate(_id, { password: hash });
+    } else {
+      return res.status(400).json({
+        success: false,
+        message: "Password not match",
+      });
+    }
   }
- }
-   
-}
+  res.status(200).json({
+    success: true,
+    message: "Password reset done",
+  });
+};
 // reset password controller end
 
 module.exports = {
@@ -238,8 +236,7 @@ module.exports = {
   loginController,
   verifyEmailController,
   forgotPasswordController,
-  resetPasswordController
+  resetPasswordController,
 };
-
 
 // eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3ODk0OTAwNDgsImV4cCI6MTc5MTIxODA0OH0.K7IEzIakV2WbD8d9nDiVGOKcEmTmUvj_IutUnLkx2Zk
