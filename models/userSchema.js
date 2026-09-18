@@ -31,7 +31,6 @@
  *           default: false
  */
 
-
 const mongoose = require('mongoose')
 const {Schema} = mongoose
 
@@ -68,9 +67,5 @@ const userSchema = new Schema({
         default: false
     }
 })
-
-
-
-
 
 module.exports = mongoose.model("User", userSchema)

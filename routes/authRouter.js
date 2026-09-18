@@ -1,5 +1,11 @@
 const express = require("express");
-const {registrationController, loginController, verifyEmailController, forgotPasswordController, resetPasswordController} = require("../controllers/authController");
+const {
+    registrationController, 
+    loginController, 
+    verifyEmailController, 
+    forgotPasswordController, 
+    resetPasswordController
+} = require("../controllers/authController");
 const _ = express.Router();
 
 /**

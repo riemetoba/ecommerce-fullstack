@@ -1,9 +1,10 @@
 const User = require('../models/userSchema')
 const Category = require('../models/categorySchema')
+const { categoryCreationEmail } = require('../utils/transporter')
 
 let userController = (req, res) => {
     try {
-        res.send("Hello user");
+        res.send("Hello user")
     } catch (error) {
         res.status(500).json({
             success: false,
@@ -15,12 +16,21 @@ let userController = (req, res) => {
 let updateController = async (req, res) => {
     try {
         let {id} = req.params
-        await User.findByIdAndUpdate({_id: id}, req.body, {new: true})
 
-        res.status(200).json({
-            success: true,
-            message: `User Updated`
-        })
+        if (req.user._id == id || req.user.role == 'admin') {
+            await User.findByIdAndUpdate({_id: id}, req.body, {new: true})
+
+            return res.status(200).json({
+                success: true,
+                message: `User Updated`
+            })
+        } else {
+            return res.status(401).json({
+                success: false,
+                message: "Unauthorized access"
+            })
+        }
+
     } catch (error) {
         res.status(500).json({
             success: false,
@@ -31,7 +41,7 @@ let updateController = async (req, res) => {
 
 let createCategoryController = async (req, res) => {
     try {
-        let {name} = req.body
+        let {name, email} = req.body
         let existingName = await Category.findOne({name: name.toLowerCase()})
 
         if (existingName) {
@@ -45,6 +55,8 @@ let createCategoryController = async (req, res) => {
             name: name.toLowerCase()
         })
         await category.save()
+
+        await categoryCreationEmail(email, category.name)
 
         res.status(201).json({
             success: true,
@@ -75,4 +87,47 @@ let getAllCategoryController = async (req, res) => {
     }
 }
 
-module.exports = {userController, updateController, createCategoryController, getAllCategoryController}
+let updateCategoryController = async (req, res) => {
+    try {
+        let {id} = req.params
+        let {name} = req.body
+        
+        await Category.findByIdAndUpdate({_id: id}, {name: name.toLowerCase()}, {new: true})
+
+        res.status(200).json({
+            success: true,
+            message: `Category Updated`
+        })
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: error.message
+        })
+    }
+}
+
+let deleteCategoryController = async (req, res) => {
+    try {
+        let {id} = req.params
+        await Category.findByIdAndDelete({_id: id})
+
+        res.status(200).json({
+            success: true,
+            message: "Category Deleted"
+        })
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: error.message
+        })
+    }
+}
+
+module.exports = {
+    userController, 
+    updateController, 
+    createCategoryController, 
+    getAllCategoryController, 
+    updateCategoryController, 
+    deleteCategoryController
+}

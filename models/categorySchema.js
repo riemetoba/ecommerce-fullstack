@@ -29,8 +29,6 @@ const categorySchema = new Schema({
         enum: ['active', 'deactive', 'reject'],
         default: 'deactive'
     }
-   
 })
-
 
 module.exports = mongoose.model("Category", categorySchema)
