@@ -9,7 +9,7 @@ const _ = express.Router();
 _.get("/products", userController)
 _.post("/update/profile/:id", updateController)
 _.post("/create/category", createCategoryController)
-_.post("/all/category", getAllCategoryController)
+_.get("/all/category", getAllCategoryController)
 
 
 module.exports = _;

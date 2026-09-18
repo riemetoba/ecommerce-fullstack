@@ -4,7 +4,7 @@ let userController = (req, res)=>{
     res.send("Hello user");
     
 }
-
+// =======================
 let updateController = async(req, res)=>{
     let {id} = req.params
     await User.findByIdAndUpdate({_id: id}, req.body, {new: true})
@@ -14,7 +14,7 @@ let updateController = async(req, res)=>{
         message: `User Updated`
     })
 }
-
+// ========================================
 
 let createCategoryController = async(req, res)=>{
     let {name} = req.body
@@ -37,7 +37,7 @@ let createCategoryController = async(req, res)=>{
         message: "Category created"
     })
 }
-
+// ========================================userC
 
 let getAllCategoryController = async(req, res)=>{
     let allCategory = await Category.find({})

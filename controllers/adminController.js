@@ -12,7 +12,7 @@ let allUserController = async (req, res)=>{
     })
     
 }
-
+// ==================================
 
 let deleteUserController = async (req, res) => {
     let {id} = req.params
@@ -31,7 +31,7 @@ let deleteUserController = async (req, res) => {
         message: "user deleted successfully"
     })
 }
-
+// ====================================
 
 let singleUserController = async(req, res)=>{
     let {id} = req.param
@@ -43,7 +43,7 @@ let singleUserController = async(req, res)=>{
         data: data
     })
 }
-
+// ==============================
 
 let activeUserController = async(req, res)=>{
     let data = await User.find({status: 'active'})
@@ -54,7 +54,7 @@ let activeUserController = async(req, res)=>{
         data: data
     })
 }
-
+// ===================================
 
 let deactiveUserController = async(req, res)=>{
     let data = await User.find({status: 'deactive'})
@@ -65,7 +65,7 @@ let deactiveUserController = async(req, res)=>{
         data: data
     })
 }
-
+// ==========================================
 
 let updateUserController = async(req, res)=>{
     let {id} = req.params
