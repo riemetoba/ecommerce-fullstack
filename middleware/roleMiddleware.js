@@ -14,15 +14,19 @@ let adminMiddleware = (req, res, next) => {
   try {
     let decoded = jwt.verify(token, process.env.JWT_VERIFY_SECRET);
 
-    if (decoded !== "admin") {
-      return res
-        .status(401)
-        .json({ success: false, message: "you're not authorized" });
+    if (decoded.role !== "admin") {
+      return res.status(401).json({
+        success: false,
+        message: "you're not authorized",
+      });
     }
 
     next();
   } catch (error) {
-    return res.status(401).json({ success: false, message: "invalid token" });
+    return res.status(401).json({
+      success: false,
+      message: "invalid token",
+    });
   }
 };
 
@@ -30,9 +34,10 @@ let vendorMiddleware = (req, res, next) => {
   let authorizationToken = req.headers.authorization;
 
   if (!authorizationToken) {
-    return res.status(401).json({ 
-        success: false, 
-        message: "you're not loggedin" });
+    return res.status(401).json({
+      success: false,
+      message: "you're not loggedin",
+    });
   }
 
   let token = authorizationToken.split(" ")[1];
@@ -40,19 +45,19 @@ let vendorMiddleware = (req, res, next) => {
   try {
     let decoded = jwt.verify(token, process.env.JWT_VERIFY_SECRET);
 
-    if (decoded !== "admin" && decoded !== "vendor") {
-      return res.status(401).json({ 
+    if (decoded.role !== "admin" && decoded.role !== "vendor") {
+      return res.status(401).json({
         success: false,
-         message: "you're not authorized" 
-    });
+        message: "you're not authorized",
+      });
     }
 
     next();
   } catch (error) {
-    return res.status(401).json({ 
-        success: false,
-         message: "invalid token"
-         });
+    return res.status(401).json({
+      success: false,
+      message: "invalid token",
+    });
   }
 };
 
@@ -60,9 +65,10 @@ let userMiddleware = (req, res, next) => {
   let authorizationToken = req.headers.authorization;
 
   if (!authorizationToken) {
-    return res
-      .status(401)
-      .json({ success: false, message: "you're not loggedin" });
+    return res.status(401).json({
+      success: false,
+      message: "you're not loggedin",
+    });
   }
 
   let token = authorizationToken.split(" ")[1];
@@ -71,9 +77,10 @@ let userMiddleware = (req, res, next) => {
     jwt.verify(token, process.env.JWT_VERIFY_SECRET);
     next();
   } catch (error) {
-    return res
-      .status(401)
-      .json({ success: false, message: "you're not loggedin" });
+    return res.status(401).json({
+      success: false,
+      message: "you're not loggedin",
+    });
   }
 };
 
