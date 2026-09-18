@@ -67,4 +67,15 @@ let deactiveUserController = async(req, res)=>{
 }
 
 
-module.exports = {allUserController, deleteUserController, singleUserController, activeUserController, deactiveUserController}
+let updateUserController = async(req, res)=>{
+    let {id} = req.params
+    await User.findByIdAndUpdate({_id: id}, req.body, {new: true})
+
+    res.status(200).json({
+        success: true,
+        message: `User Updated`
+    })
+}
+
+
+module.exports = {allUserController, deleteUserController, singleUserController, activeUserController, deactiveUserController, updateUserController}
