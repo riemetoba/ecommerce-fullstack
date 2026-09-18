@@ -34,7 +34,7 @@ let deleteUserController = async (req, res) => {
 // ====================================
 
 let singleUserController = async(req, res)=>{
-    let {id} = req.param
+    let {id} = req.params
     let data = await User.findOne({_id: id}).select('-password')
 
     res.status(200).json({
