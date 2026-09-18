@@ -18,7 +18,7 @@ let updateController = async(req, res)=>{
 
 let createCategoryController = async(req, res)=>{
     let {name} = req.body
-    let existingName = await Category.findOne({name})
+    let existingName = await Category.findOne({name: name.toLowerCase()})
 
     if (existingName) {
         return res.status(400).json({
@@ -27,7 +27,9 @@ let createCategoryController = async(req, res)=>{
     })
     }
 
-    let category = new Category({name})
+    let category = new Category({
+        name: name.toLowerCase()
+    })
     category.save()
 
     res.status(201).json({
@@ -37,5 +39,17 @@ let createCategoryController = async(req, res)=>{
 }
 
 
+let getAllCategoryController = async(req, res)=>{
+    let allCategory = await Category.find({})
 
-module.exports = {userController, updateController, createCategoryController}
+     res.status(200).json({
+        success: true,
+        message: "All Category",
+        data: allCategory
+    })
+  
+}
+
+
+
+module.exports = {userController, updateController, createCategoryController, getAllCategoryController}
