@@ -1,11 +1,12 @@
 const express = require("express");
-const { allUserController } = require("../controllers/adminController");
+const { allUserController, deleteUserController } = require("../controllers/adminController");
 const _ = express.Router();
 
 
 
 
 
-_.post("/all-user", allUserController)
+_.get("/all-user", allUserController)
+_.delete("/delete-user/:id", deleteUserController)
 
 module.exports = _;
