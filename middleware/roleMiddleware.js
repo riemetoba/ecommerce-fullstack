@@ -13,6 +13,8 @@ let adminMiddleware = (req, res, next) => {
 
   try {
     let decoded = jwt.verify(token, process.env.JWT_VERIFY_SECRET);
+    console.log(decoded);
+    
 
     if (decoded.role !== "admin") {
       return res.status(401).json({
@@ -30,6 +32,7 @@ let adminMiddleware = (req, res, next) => {
   }
 };
 
+// ============================ 
 let vendorMiddleware = (req, res, next) => {
   let authorizationToken = req.headers.authorization;
 
@@ -61,6 +64,7 @@ let vendorMiddleware = (req, res, next) => {
   }
 };
 
+// =====================================
 let userMiddleware = (req, res, next) => {
   let authorizationToken = req.headers.authorization;
 

@@ -10,7 +10,7 @@ const {
 
 // Registration controller start
 const registrationController = async (req, res) => {
-  let { fullName, email, password, confirmPassword, terms } = req.body;
+  let { fullName, email, password, confirmPassword, terms, role } = req.body;
 
   // Check if the user already exists in the database
   const existingUser = await User.findOne({ email });
@@ -24,7 +24,7 @@ const registrationController = async (req, res) => {
   }
 
   // Validate that all required fields are provided
-  if (!fullName || !email || !password || !confirmPassword || !terms) {
+  if (!fullName || !email || !password || !confirmPassword || !terms ||!role) {
     return res.status(400).json({
       success: false,
       message: "Please fill all the fields",
@@ -64,6 +64,7 @@ const registrationController = async (req, res) => {
     email: email,
     password: hash,
     terms: terms,
+    role: role
   });
   user.save();
 
