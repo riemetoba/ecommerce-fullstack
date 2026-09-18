@@ -33,4 +33,38 @@ let deleteUserController = async (req, res) => {
 }
 
 
-module.exports = {allUserController, deleteUserController}
+let singleUserController = async(req, res)=>{
+    let {id} = req.param
+    let data = await User.findOne({_id: id}).select('-password')
+
+    res.status(200).json({
+        success: true,
+        message: `User info`,
+        data: data
+    })
+}
+
+
+let activeUserController = async(req, res)=>{
+    let data = await User.find({status: 'active'})
+
+    res.status(200).json({
+        success: true,
+        message: `Active User info`,
+        data: data
+    })
+}
+
+
+let deactiveUserController = async(req, res)=>{
+    let data = await User.find({status: 'deactive'})
+
+    res.status(200).json({
+        success: true,
+        message: `Deactive User info`,
+        data: data
+    })
+}
+
+
+module.exports = {allUserController, deleteUserController, singleUserController, activeUserController, deactiveUserController}
