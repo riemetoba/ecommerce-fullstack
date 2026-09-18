@@ -1,3 +1,37 @@
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     User:
+ *       type: object
+ *       required:
+ *         - fullName
+ *         - email
+ *         - password
+ *         - terms
+ *       properties:
+ *         fullName:
+ *           type: string
+ *         email:
+ *           type: string
+ *         password:
+ *           type: string
+ *         terms:
+ *           type: boolean
+ *         role:
+ *           type: string
+ *           enum: [user, admin, vendor]
+ *           default: user
+ *         status:
+ *           type: string
+ *           enum: [active, deactive]
+ *           default: deactive
+ *         isverified:
+ *           type: boolean
+ *           default: false
+ */
+
+
 const mongoose = require('mongoose')
 const {Schema} = mongoose
 

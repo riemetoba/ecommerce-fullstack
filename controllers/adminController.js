@@ -62,7 +62,7 @@ let singleUserController = async(req, res) => {
 
 let activeUserController = async(req, res) => {
     try {
-        let data = await User.find({status: 'active'})
+        let data = await User.find({status: 'active'}).select('-password')
 
         res.status(200).json({
             success: true,
@@ -79,7 +79,7 @@ let activeUserController = async(req, res) => {
 
 let deactiveUserController = async(req, res) => {
     try {
-        let data = await User.find({status: 'deactive'})
+        let data = await User.find({status: 'deactive'}).select('-password')
 
         res.status(200).json({
             success: true,

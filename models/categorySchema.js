@@ -1,3 +1,20 @@
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     Category:
+ *       type: object
+ *       required:
+ *         - name
+ *       properties:
+ *         name:
+ *           type: string
+ *         status:
+ *           type: string
+ *           enum: [active, deactive, reject]
+ *           default: deactive
+ */
+
 const mongoose = require('mongoose')
 const {Schema} = mongoose
 
