@@ -10,7 +10,7 @@ const categorySchema = new Schema({
     status: {
         type: String,
         enum: ['active', 'deactive', 'reject'],
-        default: deactive
+        default: 'deactive'
     },
    
 })
