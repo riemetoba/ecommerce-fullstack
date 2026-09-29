@@ -2,7 +2,7 @@ const Category = require('../models/categorySchema')
 const { categoryCreationEmail } = require('../utils/transporter')
 
 
-let createCategoryController = async (req, res) => {
+let createCategory = async (req, res) => {
     try {
         let {name, email} = req.body
         let existingName = await Category.findOne({name: name.toLowerCase()})
@@ -33,7 +33,7 @@ let createCategoryController = async (req, res) => {
     }
 }
 
-let getAllCategoryController = async (req, res) => {
+let getAllCategory = async (req, res) => {
     try {
         let allCategory = await Category.find({})
 
@@ -50,7 +50,7 @@ let getAllCategoryController = async (req, res) => {
     }
 }
 
-let updateCategoryController = async (req, res) => {
+let updateCategory = async (req, res) => {
     try {
         let {id} = req.params
         let {name} = req.body
@@ -69,7 +69,7 @@ let updateCategoryController = async (req, res) => {
     }
 }
 
-let deleteCategoryController = async (req, res) => {
+let deleteCategory = async (req, res) => {
     try {
         let {id} = req.params
         await Category.findByIdAndDelete({_id: id})
@@ -86,9 +86,14 @@ let deleteCategoryController = async (req, res) => {
     }
 }
 
+let createSubCategory = async (req, res) => {
+    
+}
+
 module.exports = {
-    createCategoryController, 
-    getAllCategoryController, 
-    updateCategoryController, 
-    deleteCategoryController
+    createCategory, 
+    getAllCategory, 
+    updateCategory, 
+    deleteCategory,
+    createSubCategory
 }

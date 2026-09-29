@@ -1,21 +1,21 @@
 const express = require("express");
 const { 
-    createCategoryController, 
-    getAllCategoryController, 
-    updateCategoryController, 
-    deleteCategoryController 
+    createCategory, 
+    getAllCategory, 
+    updateCategory, 
+    deleteCategory 
 } = require("../controllers/vendorController");
 const _ = express.Router();
 
 
 
 
-_.post("/create/category", createCategoryController)
+_.post("/create/category", createCategory)
 
-_.get("/all/category", getAllCategoryController)
+_.get("/all/category", getAllCategory)
 
-_.post("/update/category/:id", updateCategoryController)
+_.post("/update/category/:id", updateCategory)
 
-_.delete("/delete/category/:id", deleteCategoryController)
+_.delete("/delete/category/:id", deleteCategory)
 
 module.exports = _;
