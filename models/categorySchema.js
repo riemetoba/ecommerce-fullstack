@@ -28,6 +28,10 @@ const categorySchema = new Schema({
         type: String,
         enum: ['active', 'deactive', 'reject'],
         default: 'deactive'
+    },
+    owner: {
+        type: Schema.Types.ObjectId,
+        ref: 'User'
     }
 })
 

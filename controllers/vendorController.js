@@ -5,7 +5,7 @@ const { categoryCreationEmail } = require('../utils/transporter')
 
 let createCategory = async (req, res) => {
     try {
-        let {name, email} = req.body
+        let {name, email, owner} = req.body
         let existingName = await Category.findOne({name: name.toLowerCase()})
 
         if (existingName) {
@@ -16,7 +16,8 @@ let createCategory = async (req, res) => {
         }
 
         let category = new Category({
-            name: name.toLowerCase()
+            name: name.toLowerCase(),
+            owner: owner
         })
         await category.save()
 
@@ -36,7 +37,7 @@ let createCategory = async (req, res) => {
 
 let getAllCategory = async (req, res) => {
     try {
-        let allCategory = await Category.find({})
+        let allCategory = await Category.find({}).populate('owner')
 
         res.status(200).json({
             success: true,
@@ -152,6 +153,26 @@ let getAllCategoryWiseSubCategory = async (req, res) => {
     }
 }
 
+const getAllOwnerWiseCategory = async (req, res) => {
+    try {
+        let {id} = req.params
+
+    let data = await find.Category({owner:id})
+
+    res.status(200).json({
+            success: true,
+            message: "All Sub-Category",
+            data: data
+        })
+
+    } catch (error) {
+         res.status(500).json({
+            success: false,
+            message: error.message
+        })
+    }
+}
+
 module.exports = {
     createCategory, 
     getAllCategory, 
@@ -159,5 +180,6 @@ module.exports = {
     deleteCategory,
     createSubCategory,
     getAllSubCategory,
-    getAllCategoryWiseSubCategory
+    getAllCategoryWiseSubCategory,
+    getAllOwnerWiseCategory
 }

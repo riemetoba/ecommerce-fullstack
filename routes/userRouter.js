@@ -26,7 +26,7 @@ const _ = express.Router();
  *       500:
  *         description: Internal Server Error
  */
-_.get("/products", userController)
+_.get("/alluser", userController)
 
 /**
  * @swagger
