@@ -117,10 +117,47 @@ let createSubCategory = async (req, res) => {
     }
 }
 
+let getAllSubCategory = async (req, res) => {
+    try {
+        let allSubCategory = await SubCategory.find({}).populate('parentCategory')
+
+        res.status(200).json({
+            success: true,
+            message: "All Sub-Category",
+            data: allSubCategory
+        })
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: error.message
+        })
+    }
+}
+
+let getAllCategoryWiseSubCategory = async (req, res) => {
+    try {
+        let {id} = req.params
+        let allSubCategory = await SubCategory.find({parentCategory:id})
+
+        res.status(200).json({
+            success: true,
+            message: "All Sub-Category",
+            data: allSubCategory
+        })
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: error.message
+        })
+    }
+}
+
 module.exports = {
     createCategory, 
     getAllCategory, 
     updateCategory, 
     deleteCategory,
-    createSubCategory
+    createSubCategory,
+    getAllSubCategory,
+    getAllCategoryWiseSubCategory
 }

@@ -3,16 +3,25 @@ const {
     createCategory, 
     getAllCategory, 
     updateCategory, 
-    deleteCategory 
+    deleteCategory, 
+    createSubCategory,
+    getAllSubCategory,
+    getAllCategoryWiseSubCategory
 } = require("../controllers/vendorController");
 const _ = express.Router();
 
 
 
 
-_.post("/create/category", createCategory)
+_.post("/create/category", createCategory) 
+
+_.post("/create/subcategory", createSubCategory)
 
 _.get("/all/category", getAllCategory)
+
+_.get("/all/subcategory", getAllSubCategory)
+
+_.get("/all/category/:id/subcategory", getAllCategoryWiseSubCategory)
 
 _.post("/update/category/:id", updateCategory)
 
