@@ -95,20 +95,19 @@ let createSubCategory = async (req, res) => {
         if (existingName) {
             return res.status(400).json({
                 success: false,
-                message: "Category already Exist"
+                message: "SubCategory already Exist"
             })
         }
 
-        let category = new Category({
-            name: name.toLowerCase()
+        let subCategory = new SubCategory({
+            name: name.toLowerCase(),
+            parentCategory: parentCategory
         })
-        await category.save()
-
-        await categoryCreationEmail(email, category.name)
+        await subCategory.save()
 
         res.status(201).json({
             success: true,
-            message: "Category created"
+            message: "SubCategory created"
         })
     } catch (error) {
         res.status(500).json({

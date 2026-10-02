@@ -55,4 +55,6 @@ let categoryCreationEmail = async(email, categoryName)=>{
     }
 }
 
+
+
 module.exports = {verificationEmail, forgotPasswordEmail, categoryCreationEmail}
