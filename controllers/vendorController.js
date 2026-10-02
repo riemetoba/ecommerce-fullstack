@@ -1,4 +1,5 @@
 const Category = require('../models/categorySchema')
+const SubCategory = require('../models/subCategorySchema')
 const { categoryCreationEmail } = require('../utils/transporter')
 
 
@@ -87,7 +88,34 @@ let deleteCategory = async (req, res) => {
 }
 
 let createSubCategory = async (req, res) => {
-    
+    try {
+        let {name, parentCategory} = req.body
+        let existingName = await SubCategory.findOne({name: name.toLowerCase()})
+
+        if (existingName) {
+            return res.status(400).json({
+                success: false,
+                message: "Category already Exist"
+            })
+        }
+
+        let category = new Category({
+            name: name.toLowerCase()
+        })
+        await category.save()
+
+        await categoryCreationEmail(email, category.name)
+
+        res.status(201).json({
+            success: true,
+            message: "Category created"
+        })
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: error.message
+        })
+    }
 }
 
 module.exports = {
