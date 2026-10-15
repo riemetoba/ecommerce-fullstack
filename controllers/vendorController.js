@@ -1,6 +1,9 @@
 const Category = require("../models/categorySchema");
 const SubCategory = require("../models/subCategorySchema");
-const { categoryCreationEmail } = require("../utils/transporter");
+const {
+  categoryCreationEmail,
+  getCategoryWithSubCategory,
+} = require("../utils/transporter");
 
 let createCategory = async (req, res) => {
   try {
@@ -164,13 +167,14 @@ let getAllCategoryWiseSubCategory = async (req, res) => {
 const getAllOwnerWiseCategory = async (req, res) => {
   try {
     let { id } = req.params;
+    let data = await Category.find({ owner: id }).lean();
 
-    let data = await find.Category({ owner: id });
-
-    res.status(200).json({
-      success: true,
-      message: "All Sub-Category",
-      data: data,
+    getCategoryWithSubCategory(data).then((value) => {
+      res.status(200).json({
+        success: true,
+        message: "All Sub-Category",
+        data: value,
+      });
     });
   } catch (error) {
     res.status(500).json({
