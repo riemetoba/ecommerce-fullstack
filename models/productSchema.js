@@ -49,9 +49,9 @@ const productSchema = new Schema({
         emun: ['approved', 'pending', 'rejected'],
         default: 'pending'
     },
-    brand: {
-        type: String
-    },
+    // brand: {
+    //     type: String
+    // },
     category: {
         type: Schema.Types.ObjectId,
         ref: 'Category'
