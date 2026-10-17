@@ -9,6 +9,7 @@ const {
     getAllCategoryWiseSubCategory,
     getAllOwnerWiseCategory
 } = require("../controllers/vendorController");
+const { createProduct } = require("../controllers/productController");
 const _ = express.Router();
 
 
@@ -31,5 +32,7 @@ _.post("/update/category/:id", updateCategory)
 _.delete("/delete/category/:id", deleteCategory)
 
 // Product
+
+_.post("/create/product", createProduct)
 
 module.exports = _;
