@@ -14,6 +14,8 @@ const _ = express.Router();
 
 
 
+
+
 // category & subCategory 
 _.post("/create/category", createCategory) 
 
@@ -33,6 +35,6 @@ _.delete("/delete/category/:id", deleteCategory)
 
 // Product
 
-_.post("/create/product", createProduct)
+_.post("/create/product",upload.array("photo"), createProduct)
 
 module.exports = _;
