@@ -13,7 +13,7 @@ const _ = express.Router();
 
 
 
-
+// category & subCategory 
 _.post("/create/category", createCategory) 
 
 _.post("/create/subcategory", createSubCategory)
@@ -29,5 +29,7 @@ _.get("/user/:id/category", getAllOwnerWiseCategory)
 _.post("/update/category/:id", updateCategory)
 
 _.delete("/delete/category/:id", deleteCategory)
+
+// Product
 
 module.exports = _;
