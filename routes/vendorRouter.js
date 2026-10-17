@@ -9,7 +9,9 @@ const {
     getAllCategoryWiseSubCategory,
     getAllOwnerWiseCategory
 } = require("../controllers/vendorController");
-const { createProduct } = require("../controllers/productController");
+
+const upload = require("../utils/storage");
+const { createProduct, getAllProduct, deleteProduct, getAllCategoryWiseProduct, getAllSubCategoryWiseProduct, getAllOwnerWiseProduct } = require("../controllers/productController");
 const _ = express.Router();
 
 
@@ -33,8 +35,19 @@ _.post("/update/category/:id", updateCategory)
 
 _.delete("/delete/category/:id", deleteCategory)
 
-// Product
 
-_.post("/create/product",upload.array("photo"), createProduct)
+
+// product
+router.post("/create/product", upload.array('image', 5), createProduct);
+
+router.get('/all/products', getAllProduct)
+
+router.delete('/product/delete/:id', deleteProduct);
+
+router.get('/product/category/:id' , getAllCategoryWiseProduct)
+
+router.get('/product/subcategory/:id' , getAllSubCategoryWiseProduct)
+
+router.get('/product/owner/:id', getAllOwnerWiseProduct)
 
 module.exports = _;
