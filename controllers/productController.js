@@ -1,4 +1,5 @@
 let Product = require("../models/productSchema")
+const productBulkSchema = require('../utils/productBulkSchema')
 
 const createProduct = async (req, res) => {
     try {
@@ -192,6 +193,51 @@ const deleteProduct = async (req, res) => {
     }
 }
 
+const bulkProductUpload = async (req, res) => {
+    try {
+        const { objects, errors } = await readSheet(req.file.path, { productBulkSchema });
+        
+        if (errors) {
+            return res.status(400).json({ 
+                success: false, 
+                message: "Invalid spreadsheet data", 
+                errors: errors 
+            });
+        }
+
+        const products = objects.map((product) => { 
+            return {
+                ...product,
+                slug : product.slug ? product.slug : product.title.toLowerCase().split(" ").join("-"),
+                sku : product.sku ? product.sku : `eco-${product.title.substring(0,4)}-${Date.now()}`,
+                images: [
+                    {
+                        url: product.images,
+                        isMain: false
+                    }
+                ]
+            };
+        });
+
+        console.log(products);
+
+        await Product.insertMany(products);
+
+        return res.status(201).json({
+            success : true,
+            message : "Products imported successfully"
+        });
+    } catch (error) {
+        console.error("Bulk Upload Error:", error);
+        return res.status(500).json({
+            success: false,
+            message: "Bulk upload failed",
+            error: error.message
+        });
+    }
+}
 
 
-module.exports = {createProduct, getAllProduct, getAllCategoryWiseProduct, getAllSubCategoryWiseProduct, getAllOwnerWiseProduct, deleteProduct}
+
+
+module.exports = {createProduct, getAllProduct, getAllCategoryWiseProduct, getAllSubCategoryWiseProduct, getAllOwnerWiseProduct, deleteProduct, bulkProductUpload}

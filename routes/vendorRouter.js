@@ -38,16 +38,16 @@ _.delete("/delete/category/:id", deleteCategory)
 
 
 // product
-router.post("/create/product", upload.array('image', 5), createProduct);
+_.post("/create/product", upload.array('image', 5), createProduct);
 
-router.get('/all/products', getAllProduct)
+_.get('/all/products', getAllProduct)
 
-router.delete('/product/delete/:id', deleteProduct);
+_.delete('/product/delete/:id', deleteProduct);
 
-router.get('/product/category/:id' , getAllCategoryWiseProduct)
+_.get('/product/category/:id' , getAllCategoryWiseProduct)
 
-router.get('/product/subcategory/:id' , getAllSubCategoryWiseProduct)
+_.get('/product/subcategory/:id' , getAllSubCategoryWiseProduct)
 
-router.get('/product/owner/:id', getAllOwnerWiseProduct)
+_.get('/product/owner/:id', getAllOwnerWiseProduct)
 
 module.exports = _;
