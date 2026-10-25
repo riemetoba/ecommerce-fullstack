@@ -11,7 +11,7 @@ const {
 } = require("../controllers/vendorController");
 
 const upload = require("../utils/storage");
-const { createProduct, getAllProduct, deleteProduct, getAllCategoryWiseProduct, getAllSubCategoryWiseProduct, getAllOwnerWiseProduct } = require("../controllers/productController");
+const { createProduct, getAllProduct, deleteProduct, getAllCategoryWiseProduct, getAllSubCategoryWiseProduct, getAllOwnerWiseProduct, updateProduct, bulkProductUpload } = require("../controllers/productController");
 const _ = express.Router();
 
 
@@ -49,5 +49,9 @@ _.get('/product/category/:id' , getAllCategoryWiseProduct)
 _.get('/product/subcategory/:id' , getAllSubCategoryWiseProduct)
 
 _.get('/product/owner/:id', getAllOwnerWiseProduct)
+
+_.post('/bulk/product',upload.single('file') ,bulkProductUpload)
+
+_.post('/single/product/upload/:id',upload.single('image') ,updateProduct)
 
 module.exports = _;
