@@ -1,4 +1,5 @@
 const User = require('../models/userSchema')
+const category = require('../models/categorySchema')
 
 let allUserController = async (req, res) => {
     try {
@@ -111,4 +112,17 @@ let updateUserController = async(req, res) => {
     }
 }
 
-module.exports = {allUserController, deleteUserController, singleUserController, activeUserController, deactiveUserController, updateUserController}
+const activeDeactiveCategory = async (req,res) => {
+    let{id} = req.params
+
+    let{status} = req.body
+
+    await category.findByIdAndUpdate({_id:id}, {status:status}, {new:true})
+
+    res.status(200).json({
+        success: true,
+        message: "Category status updated successfully"
+    })
+}
+
+module.exports = {allUserController, deleteUserController, singleUserController, activeUserController, deactiveUserController, updateUserController, activeDeactiveCategory}

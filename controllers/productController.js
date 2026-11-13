@@ -1,5 +1,5 @@
 let Product = require("../models/productSchema");
-const {readSheet} = require('read-excel-file/node')
+const { readSheet } = require("read-excel-file/node");
 const productBulkSchema = require("../utils/productBulkSchema");
 
 const createProduct = async (req, res) => {
@@ -262,35 +262,60 @@ const bulkProductUpload = async (req, res) => {
 };
 
 const updateProduct = async (req, res) => {
-  let { id } = req.params;
+  try {
+    let { id } = req.params;
 
-  let existingProduct = await Product.findOne({ _id: id });
+    if (req.body.sku || req.body.slug) {
+      return res.status(400).json({
+        success: false,
+        message: "Product SKU and URL slug cannot be modified once created.",
+      });
+    }
 
-   if (req.body.isMain) {
-    existingProduct.images.map((item, index) => {
-    item.isMain = false;
-  });
-    existingProduct.images[req.body.isMain].isMain = true;
-}
+    let existingProduct = await Product.findOne({ _id: id });
 
-  if (req.body.deleteImage) {
+    const images = [...existingProduct.images];
+    req.files.map((item) => {
+      images.push({
+        url: item.path,
+        isMain: false,
+      });
+    });
 
-   if (existingProduct.images[req.body.deleteImage].isMain == true) {
-     
-    existingProduct.images[0].isMain = true;
-    
-   }
-   existingProduct.images.splice(req.body.deleteImage, 1);
+    existingProduct.images = images;
+
+    if (req.body.isMain) {
+      existingProduct.images.map((item, index) => {
+        item.isMain = false;
+      });
+      existingProduct.images[req.body.isMain].isMain = true;
+    }
+
+    if (req.body.deleteImage) {
+      if (existingProduct.images[req.body.deleteImage].isMain == true) {
+        existingProduct.images[0].isMain = true;
+      }
+      existingProduct.images.splice(req.body.deleteImage, 1);
+    }
+
+    existingProduct.save();
+
+    let data = await Product.findByIdAndUpdate({ _id: id }, req.body, {
+      new: true,
+    });
+
+    res.status(200).json({
+      success: true,
+      message: "Product Updated",
+    });
+  } catch (error) {
+    console.error("Update Product Error:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+      error: error.message,
+    });
   }
-
-  existingProduct.save();
-
-  // let data = await Product.findByIdAndUpdate({_id: id},req.body,{new: true})
-
-  res.status(200).json({
-    success: true,
-    message: "Product Updated",
-  });
 };
 
 module.exports = {

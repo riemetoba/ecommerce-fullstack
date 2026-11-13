@@ -184,6 +184,7 @@ const getAllOwnerWiseCategory = async (req, res) => {
   }
 };
 
+
 module.exports = {
   createCategory,
   getAllCategory,

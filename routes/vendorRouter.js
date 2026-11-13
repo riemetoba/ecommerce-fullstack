@@ -38,7 +38,7 @@ _.delete("/delete/category/:id", deleteCategory)
 
 
 // product
-_.post("/create/product", upload.array('image', 5), createProduct);
+_.post("/create/product", upload.array('image'), createProduct);
 
 _.get('/all/products', getAllProduct)
 
@@ -52,6 +52,6 @@ _.get('/product/owner/:id', getAllOwnerWiseProduct)
 
 _.post('/bulk/product',upload.single('file') ,bulkProductUpload)
 
-_.post('/single/product/upload/:id',upload.single('image') ,updateProduct)
+_.post('/single/product/upload/:id',upload.array('image') ,updateProduct)
 
 module.exports = _;

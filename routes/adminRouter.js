@@ -1,5 +1,5 @@
 const express = require("express");
-const { allUserController, deleteUserController, activeUserController, deactiveUserController, updateUserController, singleUserController } = require("../controllers/adminController");
+const { allUserController, deleteUserController, activeUserController, deactiveUserController, updateUserController, singleUserController, activeDeactiveCategory } = require("../controllers/adminController");
 const _ = express.Router();
 
 /**
@@ -142,5 +142,8 @@ _.get("/deactive/user", deactiveUserController)
  *         description: Internal Server Error
  */
 _.post("/update/user/:id", updateUserController)
+
+
+_.post("/category/status/change/:id", activeDeactiveCategory)
 
 module.exports = _;
