@@ -125,6 +125,30 @@ const getAllProduct = async (req, res) => {
   }
 };
 
+
+const getSingleProduct = async (req, res) => {
+
+  let {slug} = req.params
+  try {
+    let product = await Product.findOne({slug:slug}).populate([
+      "category",
+      "subcategory",
+      "owner",
+    ]);
+
+    res.status(200).json({
+      success: true,
+      message: "Single Product",
+      product: product
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
 const getAllCategoryWiseProduct = async (req, res) => {
   try {
     let { id } = req.params;
@@ -321,6 +345,7 @@ const updateProduct = async (req, res) => {
 module.exports = {
   createProduct,
   getAllProduct,
+  getSingleProduct,
   getAllCategoryWiseProduct,
   getAllSubCategoryWiseProduct,
   getAllOwnerWiseProduct,
